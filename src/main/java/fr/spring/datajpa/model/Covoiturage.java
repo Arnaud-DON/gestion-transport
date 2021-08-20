@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -22,6 +23,9 @@ public class Covoiturage extends AbstractTravel {
 	@Column(name = "TRAVELERS_NUMBER")
 	private int nbTravelers;
 	
+	@Embedded
+	private VehiculePrivate vehicule;
+	
 	public Covoiturage() {
 		passagers = new HashSet<Collaborateur>();
 	}
@@ -36,6 +40,14 @@ public class Covoiturage extends AbstractTravel {
 
 	public Set<Collaborateur> getPassagers() {
 		return passagers;
+	}
+
+	public VehiculePrivate getVehicule() {
+		return vehicule;
+	}
+
+	public void setVehicule(VehiculePrivate vehicule) {
+		this.vehicule = vehicule;
 	}
 	
 }
