@@ -1,5 +1,6 @@
 package fr.spring.datajpa.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -17,20 +18,24 @@ public class Covoiturage extends AbstractTravel {
 		inverseJoinColumns=@JoinColumn(name="ID_USER", referencedColumnName="ID")
 	)
 	private Set<Collaborateur> passagers;
-	
-//	@Column(name="IMMATRICULATION")
-//	private String immatriculation;
-//	
-//	@Column(name="BRAND")
-//	private String brand;
-//	
-//	@Column(name="MODEL")
-//	private String model;
-//	
-//	@Enumerated(EnumType.STRING)
-//	@Column(name="CATEGORY")
-//	private Category category;
 
 	@Column(name = "TRAVELERS_NUMBER")
 	private int nbTravelers;
+	
+	public Covoiturage() {
+		passagers = new HashSet<Collaborateur>();
+	}
+
+	public int getNbTravelers() {
+		return nbTravelers;
+	}
+
+	public void setNbTravelers(int nbTravelers) {
+		this.nbTravelers = nbTravelers;
+	}
+
+	public Set<Collaborateur> getPassagers() {
+		return passagers;
+	}
+	
 }

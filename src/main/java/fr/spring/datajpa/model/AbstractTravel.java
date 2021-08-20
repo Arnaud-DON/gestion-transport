@@ -45,4 +45,57 @@ public abstract class AbstractTravel {
 	@Enumerated(EnumType.STRING)
 	@Column(name="STATUS")
 	private Status status;
+
+	public Collaborateur getOrganisator() {
+		return organisator;
+	}
+
+	public void setOrganisator(Collaborateur organisator) {
+		this.organisator = organisator;
+	}
+
+	public String getDeparture() {
+		return departure;
+	}
+
+	public void setDeparture(String departure) {
+		this.departure = departure;
+	}
+
+	public String getArrival() {
+		return arrival;
+	}
+
+	public void setArrival(String arrival) {
+		this.arrival = arrival;
+	}
+
+	public LocalDateTime getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDateTime date) {
+		this.date = date;
+	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public long getId() {
+		return id;
+	}
+	
 }

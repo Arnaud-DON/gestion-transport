@@ -15,4 +15,9 @@ public class Administrateur extends Collaborateur {
 	public Administrateur() {
 		vehicules = new HashSet<VehiculeService>();
 	}
+
+	public Set<VehiculeService> getVehicules() {
+		return vehicules;
+	}
+	
 }

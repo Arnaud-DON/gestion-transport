@@ -18,4 +18,33 @@ public class Reservation extends AbstractTravel {
 	@ManyToOne
 	@JoinColumn(name="CHAUFFEUR")
 	private Chauffeur chauffeur;
+	
+	public Reservation() {
+
+	}
+
+	public boolean isWithDriver() {
+		return withDriver;
+	}
+
+	public void setWithDriver(boolean withDriver) {
+		this.withDriver = withDriver;
+	}
+
+	public VehiculeService getVehicule() {
+		return vehicule;
+	}
+
+	public void setVehicule(VehiculeService vehicule) {
+		this.vehicule = vehicule;
+	}
+
+	public Chauffeur getChauffeur() {
+		return chauffeur;
+	}
+
+	public void setChauffeur(Chauffeur chauffeur) {
+		this.chauffeur = chauffeur;
+	}
+	
 }
