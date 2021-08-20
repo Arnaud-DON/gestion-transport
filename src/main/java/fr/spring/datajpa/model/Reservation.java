@@ -10,8 +10,12 @@ public class Reservation extends AbstractTravel {
 
 	@Column(name = "WITH_DRIVER")
 	private boolean withDriver;
-	
+
 	@ManyToOne
 	@JoinColumn(name="VEHICULE")
 	private VehiculeService vehicule;
+	
+	@ManyToOne
+	@JoinColumn(name="CHAUFFEUR")
+	private Chauffeur chauffeur;
 }
