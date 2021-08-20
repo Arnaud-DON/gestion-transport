@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Collaborateur extends AbstractUser {
@@ -17,5 +18,8 @@ public class Collaborateur extends AbstractUser {
 	)
 	private Set<AbstractTravel> travels;
 	
+	@OneToOne
+	@JoinColumn(name = "VEHICUL_PERSO", referencedColumnName = "immatriculation")
+	private VehiculePrivate vehiculePerso;
 	
 }
