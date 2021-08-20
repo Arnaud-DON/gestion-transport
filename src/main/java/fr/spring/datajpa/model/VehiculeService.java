@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import fr.spring.datajpa.enums.Status;
+import fr.spring.datajpa.enums.VehiculeStatus;
 
 @Entity
 public class VehiculeService extends AbstractVehicule {
@@ -21,7 +21,7 @@ public class VehiculeService extends AbstractVehicule {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name="STATUS")
-	private Status status;
+	private VehiculeStatus status;
 	
 	@ManyToOne
 	@JoinColumn(name="RESPONSABLE")
@@ -42,11 +42,11 @@ public class VehiculeService extends AbstractVehicule {
 		this.imgUrl = imgUrl;
 	}
 
-	public Status getStatus() {
+	public VehiculeStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public void setStatus(VehiculeStatus status) {
 		this.status = status;
 	}
 

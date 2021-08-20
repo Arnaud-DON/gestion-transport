@@ -15,7 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import fr.spring.datajpa.enums.Status;
+import fr.spring.datajpa.enums.TravelStatus;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -43,8 +43,8 @@ public abstract class AbstractTravel {
 	private int duration;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name="STATUS")
-	private Status status;
+	@Column(name="TravelStatus")
+	private TravelStatus TravelStatus;
 
 	public Collaborateur getOrganisator() {
 		return organisator;
@@ -86,12 +86,12 @@ public abstract class AbstractTravel {
 		this.duration = duration;
 	}
 
-	public Status getStatus() {
-		return status;
+	public TravelStatus getTravelStatus() {
+		return TravelStatus;
 	}
 
-	public void setStatus(Status status) {
-		this.status = status;
+	public void setTravelStatus(TravelStatus TravelStatus) {
+		this.TravelStatus = TravelStatus;
 	}
 
 	public long getId() {
