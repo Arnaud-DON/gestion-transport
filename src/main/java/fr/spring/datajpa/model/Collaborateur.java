@@ -19,7 +19,7 @@ public class Collaborateur extends AbstractUser {
 	private Set<AbstractTravel> travels;
 	
 	@OneToOne
-	@JoinColumn(name = "VEHICUL_PERSO", referencedColumnName = "immatriculation")
+	@JoinColumn(name = "VEHICULE_PERSO", referencedColumnName = "immatriculation")
 	private VehiculePrivate vehiculePerso;
 	
 }
