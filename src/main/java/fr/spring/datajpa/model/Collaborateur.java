@@ -8,7 +8,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Collaborateur extends AbstractUser {
@@ -20,24 +19,12 @@ public class Collaborateur extends AbstractUser {
 	)
 	private Set<Covoiturage> travels;
 	
-	@OneToOne
-	@JoinColumn(name = "VEHICULE_PERSO", referencedColumnName = "immatriculation")
-	private VehiculePrivate vehiculePerso;
-	
 	@OneToMany(mappedBy="organisator")
 	private Set<AbstractTravel> organizedTravels;
 	
 	public Collaborateur() {
 		travels = new HashSet<Covoiturage>();
 		organizedTravels = new HashSet<AbstractTravel>();
-	}
-
-	public VehiculePrivate getVehiculePerso() {
-		return vehiculePerso;
-	}
-
-	public void setVehiculePerso(VehiculePrivate vehiculePerso) {
-		this.vehiculePerso = vehiculePerso;
 	}
 
 	public Set<Covoiturage> getTravels() {
