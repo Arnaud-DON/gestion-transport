@@ -9,6 +9,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import fr.spring.datajpa.enums.Role;
+
 @Entity
 public class Collaborateur extends AbstractUser {
 	
@@ -33,6 +35,11 @@ public class Collaborateur extends AbstractUser {
 
 	public Set<AbstractTravel> getOrganizedTravels() {
 		return organizedTravels;
+	}
+
+	@Override
+	public Role getRole() {
+		return Role.COLLABORATEUR;
 	}
 	
 }

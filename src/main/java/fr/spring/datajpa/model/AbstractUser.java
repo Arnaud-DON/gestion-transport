@@ -12,10 +12,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import fr.spring.datajpa.enums.Role;
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name="USERS")
 public abstract class AbstractUser {
+	
+	public abstract Role getRole();
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
