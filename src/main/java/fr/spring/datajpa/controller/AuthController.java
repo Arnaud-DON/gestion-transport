@@ -104,7 +104,7 @@ public class AuthController {
 		user.setImgUrl(imgUrl);
 		user.setMail(mail);
 		user.setName(name);
-		user.setPassword(pwd);
+		user.setPassword(encoder.encode(pwd));
 		user.setTel(tel);
 		
 		userRepository.save(user);
