@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import fr.spring.datajpa.enums.Role;
 import fr.spring.datajpa.model.AbstractUser;
 
 public class UserDetailsImpl implements UserDetails {
@@ -18,42 +19,30 @@ public class UserDetailsImpl implements UserDetails {
 	private String username;
 
 	private String email;
-
+	
 	@JsonIgnore
 	private String password;
 
-	private Collection<? extends GrantedAuthority> authorities;
+	private Role role;
 
-	public UserDetailsImpl(Long id, String username, String email, String password) {
-//			Collection<? extends GrantedAuthority> authorities) {
-		this.id = id;
-		this.username = username;
+	public UserDetailsImpl(String email, String password, Role role) {
 		this.email = email;
 		this.password = password;
-//		this.authorities = authorities;
+		this.role = role;
 	}
 
 	public static UserDetailsImpl build(AbstractUser user) {
-//		List<GrantedAuthority> authorities = user.getRoles().stream()
-//				.map(role -> new SimpleGrantedAuthority(role.getName().name()))
-//				.collect(Collectors.toList());
 
-//		return new UserDetailsImpl(
-//				user.getId(), 
-//				user.getFullname(), 
-//				user.getMail(),
-//				user.getPassword(), 
-//				authorities);
 		return new UserDetailsImpl(
-				user.getId(), 
-				user.getFullname(), 
 				user.getMail(),
-				user.getPassword());
+				user.getPassword(),
+				user.getRole()
+				);
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
+		return null;
 	}
 
 	public Long getId() {
@@ -102,5 +91,13 @@ public class UserDetailsImpl implements UserDetails {
 			return false;
 		UserDetailsImpl user = (UserDetailsImpl) o;
 		return Objects.equals(id, user.id);
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 }

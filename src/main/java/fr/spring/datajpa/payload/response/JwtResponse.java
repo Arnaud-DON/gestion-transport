@@ -1,45 +1,16 @@
 package fr.spring.datajpa.payload.response;
 
-import java.util.List;
+import fr.spring.datajpa.enums.Role;
 
 public class JwtResponse {
 	private String token;
-	private String type = "Bearer";
-	private Long id;
-	private String username;
 	private String mail;
-	private List<String> roles;
+	private Role role;
 
-	public JwtResponse(String accessToken, Long id, String username, String mail, List<String> roles) {
+	public JwtResponse(String accessToken, String mail, Role role) {
 		this.token = accessToken;
-		this.id = id;
-		this.username = username;
 		this.mail = mail;
-		this.roles = roles;
-	}
-
-	public String getAccessToken() {
-		return token;
-	}
-
-	public void setAccessToken(String accessToken) {
-		this.token = accessToken;
-	}
-
-	public String getTokenType() {
-		return type;
-	}
-
-	public void setTokenType(String tokenType) {
-		this.type = tokenType;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
+		this.role = role;
 	}
 
 	public String getMail() {
@@ -50,15 +21,19 @@ public class JwtResponse {
 		this.mail = mail;
 	}
 
-	public String getUsername() {
-		return username;
+	public Role getRole() {
+		return role;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
-	public List<String> getRoles() {
-		return roles;
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

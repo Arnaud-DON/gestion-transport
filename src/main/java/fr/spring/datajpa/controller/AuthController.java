@@ -1,8 +1,5 @@
 package fr.spring.datajpa.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.spring.datajpa.enums.Role;
+import fr.spring.datajpa.model.AbstractUser;
+import fr.spring.datajpa.model.Administrateur;
+import fr.spring.datajpa.model.Chauffeur;
 import fr.spring.datajpa.model.Collaborateur;
 import fr.spring.datajpa.payload.request.LoginRequest;
 import fr.spring.datajpa.payload.request.SignupRequest;
@@ -47,37 +48,64 @@ public class AuthController {
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+				new UsernamePasswordAuthenticationToken(loginRequest.getMail(), loginRequest.getPassword()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtils.generateJwtToken(authentication);
 		
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
-		List<String> roles = userDetails.getAuthorities().stream()
-				.map(item -> item.getAuthority())
-				.collect(Collectors.toList());
+		Role role = userDetails.getRole();
 
-		return ResponseEntity.ok(new JwtResponse(jwt, 
-												 userDetails.getId(), 
-												 userDetails.getUsername(), 
+		return ResponseEntity.ok(new JwtResponse(jwt,
 												 userDetails.getEmail(), 
-												 roles));
+												 role));
 	}
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
-		if (userRepository.existsByMail(signUpRequest.getMail())) {
+		String mail = signUpRequest.getMail();
+		
+		if (userRepository.existsByMail(mail)) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Email is already in use!"));
 		}
-
-		// Create new user's account
-//		Collaborateur user = new Collaborateur(signUpRequest.getMail(),
-//							 encoder.encode(signUpRequest.getPassword()));
 		
-		Collaborateur user = new Collaborateur();
+		String name = signUpRequest.getName();
+		String firstName = signUpRequest.getFirstName();
+		String tel = signUpRequest.getTel();
+		String imgUrl = signUpRequest.getImgUrl();
+		String pwd = signUpRequest.getPassword();
+		Role role = signUpRequest.getRole();
+		
+		// Create new user's account
+		AbstractUser user = null;
+		
+		switch(role) {
+
+		case COLLABORATEUR:
+			user = new Collaborateur();
+			break;
+			
+		case ADMIN:
+			user = new Administrateur();
+			break;
+			
+		case CHAUFFEUR:
+			user = new Chauffeur();
+			break;
+			
+		default:
+			throw new IllegalArgumentException("Unexpected value please select a correct Role : " + signUpRequest.getRole());
+		}
+		
+		user.setFirstName(firstName);
+		user.setImgUrl(imgUrl);
+		user.setMail(mail);
+		user.setName(name);
+		user.setPassword(pwd);
+		user.setTel(tel);
 		
 		userRepository.save(user);
 
