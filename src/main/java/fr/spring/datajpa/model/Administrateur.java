@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import fr.spring.datajpa.enums.Role;
+
 @Entity
 public class Administrateur extends Collaborateur {
 
@@ -18,6 +20,11 @@ public class Administrateur extends Collaborateur {
 
 	public Set<VehiculeService> getVehicules() {
 		return vehicules;
+	}
+
+	@Override
+	public Role getRole() {
+		return Role.ADMIN;
 	}
 	
 }
