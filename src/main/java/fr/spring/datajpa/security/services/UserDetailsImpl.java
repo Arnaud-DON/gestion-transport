@@ -18,6 +18,11 @@ public class UserDetailsImpl implements UserDetails {
 
 	private String username;
 
+	private String name;
+	private String firstName;
+	private String tel;
+	private String imgUrl;
+
 	private String email;
 	
 	@JsonIgnore
@@ -25,10 +30,15 @@ public class UserDetailsImpl implements UserDetails {
 
 	private Role role;
 
-	public UserDetailsImpl(String email, String password, Role role) {
+	public UserDetailsImpl(String email, String password, Role role, String name, String firstName, String tel, String imgUrl) {
 		this.email = email;
 		this.password = password;
 		this.role = role;
+		this.name = name;
+		this.firstName = firstName;
+		this.tel = tel;
+		this.imgUrl = imgUrl;
+		this.username = name.toUpperCase() + " " + firstName;
 	}
 
 	public static UserDetailsImpl build(AbstractUser user) {
@@ -36,7 +46,11 @@ public class UserDetailsImpl implements UserDetails {
 		return new UserDetailsImpl(
 				user.getMail(),
 				user.getPassword(),
-				user.getRole()
+				user.getRole(),
+				user.getName(),
+				user.getFirstName(),
+				user.getTel(),
+				user.getImgUrl()
 				);
 	}
 
@@ -100,4 +114,21 @@ public class UserDetailsImpl implements UserDetails {
 	public void setRole(Role role) {
 		this.role = role;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getTel() {
+		return tel;
+	}
+
+	public String getImgUrl() {
+		return imgUrl;
+	}
+	
 }

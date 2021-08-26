@@ -51,14 +51,18 @@ public class AuthController {
 				new UsernamePasswordAuthenticationToken(loginRequest.getMail(), loginRequest.getPassword()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtUtils.generateJwtToken(authentication);
+		String tokenJwt = jwtUtils.generateJwtToken(authentication);
 		
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
 		Role role = userDetails.getRole();
 
-		return ResponseEntity.ok(new JwtResponse(jwt,
+		return ResponseEntity.ok(new JwtResponse(tokenJwt,
 												 userDetails.getEmail(), 
-												 role));
+												 role,
+												 userDetails.getName(),
+												 userDetails.getFirstName(),
+												 userDetails.getTel(),
+												 userDetails.getImgUrl()));
 	}
 
 	@PostMapping("/signup")
