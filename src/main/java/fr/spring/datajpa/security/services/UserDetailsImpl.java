@@ -38,7 +38,7 @@ public class UserDetailsImpl implements UserDetails {
 		this.firstName = firstName;
 		this.tel = tel;
 		this.imgUrl = imgUrl;
-		this.username = name.toUpperCase() + " " + firstName;
+		this.username = email;
 	}
 
 	public static UserDetailsImpl build(AbstractUser user) {
