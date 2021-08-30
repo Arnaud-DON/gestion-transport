@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import fr.spring.datajpa.enums.TravelStatus;
 
 @Entity
@@ -27,47 +29,56 @@ public abstract class AbstractTravel {
 	private long id;
 
 	@ManyToOne
-	@JoinColumn(name="ORGANISATOR")
-	private Collaborateur organisator;
+	@JsonIgnore
+	@JoinColumn(name="ORGANISATEUR")
+	private Collaborateur organisateur;
 	
-	@Column(name = "DEPARTURE")
-	private String departure;
+	@Column(name = "ADRESSE_DEPART")
+	private String adresseDepart;
 	
-	@Column(name = "ARRIVAL")
-	private String arrival;
+	@Column(name = "ADRESSE_DESTINATION")
+	private String adresseDestination;
 	
 	@Column(name = "DATE")
 	private LocalDateTime date;
 	
-	@Column(name = "DURATION")
-	private int duration;
+	@Column(name = "DUREE")
+	private int duree;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name="TravelStatus")
 	private TravelStatus TravelStatus;
 
-	public Collaborateur getOrganisator() {
-		return organisator;
+	public Collaborateur getOrganisateur() {
+		return organisateur;
 	}
 
-	public void setOrganisator(Collaborateur organisator) {
-		this.organisator = organisator;
+	public void setOrganisateur(Collaborateur organisateur) {
+		this.organisateur = organisateur;
 	}
 
-	public String getDeparture() {
-		return departure;
+	public String getAdresseDepart() {
+		return adresseDepart;
 	}
 
-	public void setDeparture(String departure) {
-		this.departure = departure;
+	public void setAdresseDepart(String adresseDepart) {
+		this.adresseDepart = adresseDepart;
 	}
 
-	public String getArrival() {
-		return arrival;
+	public String getAdresseDestination() {
+		return adresseDestination;
 	}
 
-	public void setArrival(String arrival) {
-		this.arrival = arrival;
+	public void setAdresseDestination(String adresseDestination) {
+		this.adresseDestination = adresseDestination;
+	}
+
+	public int getDuree() {
+		return duree;
+	}
+
+	public void setDuree(int duree) {
+		this.duree = duree;
 	}
 
 	public LocalDateTime getDate() {
@@ -76,14 +87,6 @@ public abstract class AbstractTravel {
 
 	public void setDate(LocalDateTime date) {
 		this.date = date;
-	}
-
-	public int getDuration() {
-		return duration;
-	}
-
-	public void setDuration(int duration) {
-		this.duration = duration;
 	}
 
 	public TravelStatus getTravelStatus() {
