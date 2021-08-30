@@ -43,7 +43,7 @@ public class TravelController {
 	JwtUtils jwtUtils;
 	
 	@PostMapping("/newAnnonce")
-	public ResponseEntity<Covoiturage> createTutorial(@Valid @RequestBody PublicationRequest pubRequest) {
+	public ResponseEntity<?> createTutorial(@Valid @RequestBody PublicationRequest pubRequest) {
 		try {
 			UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			
@@ -55,7 +55,7 @@ public class TravelController {
 				organisateur = (Collaborateur) currentUser;
 			}
 			else {
-				throw new Exception("ERROR : Unauthorized action !");
+				throw new Exception("Unauthorized action !");
 			}
 			
 			VehiculePrivate vehicule = new VehiculePrivate(
@@ -75,9 +75,10 @@ public class TravelController {
 						);
 			
 			covoit = travelRepository.save(covoit);
-			return new ResponseEntity<>(covoit, HttpStatus.CREATED);
+			return new ResponseEntity<Covoiturage>(covoit, HttpStatus.CREATED);
 		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+			return ResponseEntity
+		            .status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	}
 	
