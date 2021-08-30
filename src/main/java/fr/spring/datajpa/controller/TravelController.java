@@ -1,5 +1,8 @@
 package fr.spring.datajpa.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.spring.datajpa.model.AbstractTravel;
 import fr.spring.datajpa.model.AbstractUser;
 import fr.spring.datajpa.model.Collaborateur;
 import fr.spring.datajpa.model.Covoiturage;
@@ -58,19 +62,36 @@ public class TravelController {
 				throw new Exception("Unauthorized action !");
 			}
 			
+			String immatriculation = pubRequest.getImmatriculation();
+			String marque = pubRequest.getMarque();
+			String modele = pubRequest.getModele();
+			int nbPlaces = pubRequest.getNbPlaces();
+			
 			VehiculePrivate vehicule = new VehiculePrivate(
-							pubRequest.getImmatriculation(),
-							pubRequest.getMarque(),
-							pubRequest.getModele(),
-							pubRequest.getNbPlaces()
+							immatriculation,
+							marque,
+							modele,
+							nbPlaces
 						);
+
+			String adresseDepart = pubRequest.getAdresseDepart();
+			String adresseDestination = pubRequest.getAdresseDestination();
+			int duree = pubRequest.getDuree();
+			LocalDateTime dateDepart = pubRequest.getDateTime();
+			
+			AbstractTravel concurrentTravel = organisateur.getConcurrentTravel(dateDepart, duree);
+			if(concurrentTravel != null) {
+				throw new Exception("Vous avez déjà un voyage prévu sur cette période : (date: "
+									+ concurrentTravel.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm"))
+									+ ", durée : "+concurrentTravel.getDuree()+" minutes) ");
+			}
 			
 			Covoiturage covoit = new Covoiturage(
 							organisateur,
-							pubRequest.getAdresseDepart(),
-							pubRequest.getAdresseDestination(),
-							pubRequest.getDuree(),
-							pubRequest.getDateTime(),
+							adresseDepart,
+							adresseDestination,
+							duree,
+							dateDepart,
 							vehicule
 						);
 			
