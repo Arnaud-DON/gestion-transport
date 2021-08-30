@@ -45,8 +45,7 @@ public class Covoiturage extends AbstractTravel {
 		setDate(date);
 		this.vehicule = vehicule;
 		this.passagers = new HashSet<Collaborateur>();
-		passagers.add(organisateur);
-		this.nbPassagers = 1;
+		this.nbPassagers = 0;
 	}
 
 	public int getNbPassagers() {
@@ -71,9 +70,11 @@ public class Covoiturage extends AbstractTravel {
 
 
 
-	public void addPassager(Collaborateur organisateur) {
-		this.passagers.add(organisateur);
-		this.nbPassagers++;
+	public void addPassager(Collaborateur passager) {
+		if(getNbPassagers() > vehicule.getTotalPlaces() +1) {
+			this.passagers.add(passager);
+			this.nbPassagers++;
+		}
 	}
 	
 }
