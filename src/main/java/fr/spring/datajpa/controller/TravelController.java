@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,7 +24,6 @@ import fr.spring.datajpa.model.VehiculePrivate;
 import fr.spring.datajpa.payload.request.PublicationRequest;
 import fr.spring.datajpa.repository.TravelRepository;
 import fr.spring.datajpa.repository.UserRepository;
-import fr.spring.datajpa.security.jwt.JwtUtils;
 import fr.spring.datajpa.security.services.UserDetailsImpl;
 
 
@@ -40,20 +38,11 @@ public class TravelController {
 	@Autowired
 	UserRepository userRepository;
 	
-	@Autowired
-	AuthenticationManager authenticationManager;
-
-	@Autowired
-	JwtUtils jwtUtils;
-	
 	@PostMapping("/newAnnonce")
 	public ResponseEntity<?> createTutorial(@Valid @RequestBody PublicationRequest pubRequest) {
 		try {
-			UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			
-			AbstractUser currentUser = userRepository.findByMail(userDetails.getEmail())
-					.orElseThrow(() -> new UsernameNotFoundException("Authentication error, please logout and login back. If the problem persists please contact an administrator."));
-			
+			AbstractUser currentUser = getCurrentUtilisateur();
 			Collaborateur organisateur = null;
 			if(currentUser instanceof Collaborateur) {
 				organisateur = (Collaborateur) currentUser;
@@ -101,6 +90,16 @@ public class TravelController {
 			return ResponseEntity
 		            .status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
+	}
+	
+	private AbstractUser getCurrentUtilisateur() throws Exception{
+
+		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		AbstractUser currentUser = userRepository.findByMail(userDetails.getEmail())
+				.orElseThrow(() -> new UsernameNotFoundException("Authentication error, please logout and login back. If the problem persists please contact an administrator."));
+		
+		return currentUser;
 	}
 	
 }
