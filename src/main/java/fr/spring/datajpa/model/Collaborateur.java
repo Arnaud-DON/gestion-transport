@@ -21,20 +21,20 @@ public class Collaborateur extends AbstractUser {
 	)
 	private Set<Covoiturage> travels;
 	
-	@OneToMany(mappedBy="organisator")
-	private Set<AbstractTravel> organizedTravels;
+	@OneToMany(mappedBy="organisateur")
+	private Set<AbstractTravel> annoncesPubliees;
 	
 	public Collaborateur() {
 		travels = new HashSet<Covoiturage>();
-		organizedTravels = new HashSet<AbstractTravel>();
+		annoncesPubliees = new HashSet<AbstractTravel>();
 	}
 
 	public Set<Covoiturage> getTravels() {
 		return travels;
 	}
 
-	public Set<AbstractTravel> getOrganizedTravels() {
-		return organizedTravels;
+	public Set<AbstractTravel> getAnnoncePubliees() {
+		return annoncesPubliees;
 	}
 
 	@Override

@@ -2,10 +2,6 @@ package fr.spring.datajpa.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
-import fr.spring.datajpa.enums.Category;
 
 @Embeddable
 public class VehiculePrivate {
@@ -13,21 +9,24 @@ public class VehiculePrivate {
 	@Column(name="IMMATRICULATION")
 	private String immatriculation;
 	
-	@Column(name="BRAND")
-	private String brand;
+	@Column(name="MARQUE")
+	private String marque;
 	
 	@Column(name="MODEL")
-	private String model;
-	
-	@Enumerated(EnumType.STRING)
-	@Column(name="CATEGORY")
-	private Category category;
+	private String modele;
 	
 	@Column(name="TOTAL_PLACES")
 	private int totalPlaces;
 	
 	public VehiculePrivate() {
 
+	}
+
+	public VehiculePrivate(String immatriculation, String marque, String modele, int nbPlaces) {
+		this.immatriculation = immatriculation;
+		this.marque = marque;
+		this.modele = modele;
+		this.totalPlaces = nbPlaces + 1; // Le chauffeur compte pour une place
 	}
 
 	public String getImmatriculation() {
@@ -38,28 +37,20 @@ public class VehiculePrivate {
 		this.immatriculation = immatriculation;
 	}
 
-	public String getBrand() {
-		return brand;
+	public String getMarque() {
+		return marque;
 	}
 
-	public void setBrand(String brand) {
-		this.brand = brand;
+	public void setMarque(String marque) {
+		this.marque = marque;
 	}
 
-	public String getModel() {
-		return model;
+	public String getModele() {
+		return modele;
 	}
 
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setModele(String modele) {
+		this.modele = modele;
 	}
 
 	public int getTotalPlaces() {
