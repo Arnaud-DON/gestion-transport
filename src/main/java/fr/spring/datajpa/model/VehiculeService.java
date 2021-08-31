@@ -85,7 +85,7 @@ public class VehiculeService {
 		this.modele = modele;
 	}
 
-	public Category getCategory() {
+	public Category getCategorie() {
 		return categorie;
 	}
 
