@@ -26,7 +26,7 @@ public class VehiculePrivate {
 		this.immatriculation = immatriculation;
 		this.marque = marque;
 		this.modele = modele;
-		this.totalPlaces = nbPlaces + 1; // Le chauffeur compte pour une place
+		this.totalPlaces = nbPlaces ;
 	}
 
 	public String getImmatriculation() {

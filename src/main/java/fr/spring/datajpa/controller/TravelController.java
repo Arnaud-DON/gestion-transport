@@ -2,17 +2,15 @@ package fr.spring.datajpa.controller;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.validation.Valid;
+
+import fr.spring.datajpa.DTO.CovoiturageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import fr.spring.datajpa.model.AbstractTravel;
 import fr.spring.datajpa.model.AbstractUser;
@@ -23,9 +21,9 @@ import fr.spring.datajpa.payload.request.PublicationRequest;
 import fr.spring.datajpa.repository.TravelRepository;
 import fr.spring.datajpa.repository.UserRepository;
 import fr.spring.datajpa.security.services.UserDetailsImpl;
-
 import fr.spring.datajpa.repository.CovoiturageRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -108,6 +106,21 @@ public class TravelController {
 	CovoiturageRepository covoiturageRepository;
 
 	@GetMapping("/listcovoiturage")
-	public List<Covoiturage> getallcovoit(){return covoiturageRepository.findAll();}
+	public List<CovoiturageDTO> extraireCovoit(@RequestParam(value = "type", required = false) String type)
+	throws Exception{
 
+		List<Covoiturage> covoiturages = covoiturageRepository.findCovoiturageCollaborateur(getCurrentUtilisateur().getMail());
+
+		List<CovoiturageDTO> dtos = new ArrayList<>();
+		for (Covoiturage covoit: covoiturages) {
+			CovoiturageDTO dto = new CovoiturageDTO();
+			dto.setAdresseDepart(covoit.getAdresseDepart());
+			dto.setDate(covoit.getDate());
+			dto.setAdresseDestination(covoit.getAdresseDestination());
+			dto.setDuree(covoit.getDuree());
+			dto.setOrganisateur(covoit.getOrganisateur());
+			dto.setNbPassagers(covoit.getNbPassagers());
+			dtos.add(dto);
+		}
+		return dtos;}
 }

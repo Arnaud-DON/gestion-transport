@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.spring.datajpa.enums.Category;
 import fr.spring.datajpa.enums.VehiculeStatus;
 
@@ -22,15 +23,15 @@ public class VehiculeService {
 	@Column(name="IMMATRICULATION")
 	private String immatriculation;
 	
-	@Column(name="BRAND")
-	private String brand;
+	@Column(name="Marque")
+	private String marque;
 	
-	@Column(name="MODEL")
-	private String model;
+	@Column(name="MODELE")
+	private String modele;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name="CATEGORY")
-	private Category category;
+	@Column(name="CATEGORIE")
+	private Category categorie;
 
 	@Column(name="IMG_URL")
 	private String imgUrl;
@@ -43,11 +44,20 @@ public class VehiculeService {
 	@JoinColumn(name="RESPONSABLE")
 	private Administrateur responsable;
 
+	@JsonIgnore
 	@OneToMany(mappedBy="vehicule")
 	private Set<Reservation> reservations;
 	
 	public VehiculeService() {
 		reservations = new HashSet<Reservation>();
+	}
+
+	public VehiculeService(String immatriculation, String marque, String modele, Category categorie, String imgUrl) {
+		this.immatriculation = immatriculation;
+		this.marque = marque;
+		this.modele = modele;
+		this.categorie = categorie;
+		this.imgUrl = imgUrl;
 	}
 
 	public String getImmatriculation() {
@@ -56,30 +66,6 @@ public class VehiculeService {
 
 	public void setImmatriculation(String immatriculation) {
 		this.immatriculation = immatriculation;
-	}
-
-	public String getBrand() {
-		return brand;
-	}
-
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
-
-	public String getModel() {
-		return model;
-	}
-
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
 	}
 
 	public String getImgUrl() {
@@ -109,5 +95,32 @@ public class VehiculeService {
 	public Set<Reservation> getReservations() {
 		return reservations;
 	}
-	
+
+	public String getMarque() {
+		return marque;
+	}
+
+	public void setMarque(String marque) {
+		this.marque = marque;
+	}
+
+	public String getModele() {
+		return modele;
+	}
+
+	public void setModele(String modele) {
+		this.modele = modele;
+	}
+
+	public Category getCategorie() {
+		return categorie;
+	}
+
+	public void setCategorie(Category categorie) {
+		this.categorie = categorie;
+	}
+
+	public void setReservations(Set<Reservation> reservations) {
+		this.reservations = reservations;
+	}
 }
