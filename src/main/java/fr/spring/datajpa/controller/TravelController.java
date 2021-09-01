@@ -8,8 +8,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +22,6 @@ import fr.spring.datajpa.model.VehiculePrivate;
 import fr.spring.datajpa.payload.request.PublicationRequest;
 import fr.spring.datajpa.repository.TravelRepository;
 import fr.spring.datajpa.repository.UserRepository;
-import fr.spring.datajpa.security.services.UserDetailsImpl;
 
 
 @CrossOrigin(origins = "*")
@@ -39,16 +36,16 @@ public class TravelController {
 	UserRepository userRepository;
 	
 	@PostMapping("/newAnnonce")
-	public ResponseEntity<?> createTutorial(@Valid @RequestBody PublicationRequest pubRequest) {
+	public ResponseEntity<?> publishAnnonce(@Valid @RequestBody PublicationRequest pubRequest) {
 		try {
 			
-			AbstractUser currentUser = getCurrentUtilisateur();
+			AbstractUser currentUser = AuthController.getCurrentUtilisateur(userRepository);
 			Collaborateur organisateur = null;
 			if(currentUser instanceof Collaborateur) {
 				organisateur = (Collaborateur) currentUser;
 			}
 			else {
-				throw new Exception("Unauthorized action !");
+				throw new Exception("Unauthorized action ");
 			}
 			
 			String immatriculation = pubRequest.getImmatriculation();
@@ -90,16 +87,6 @@ public class TravelController {
 			return ResponseEntity
 		            .status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
-	}
-	
-	private AbstractUser getCurrentUtilisateur() throws Exception{
-
-		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-		AbstractUser currentUser = userRepository.findByMail(userDetails.getEmail())
-				.orElseThrow(() -> new UsernameNotFoundException("Authentication error, please logout and login back. If the problem persists please contact an administrator."));
-		
-		return currentUser;
 	}
 	
 }

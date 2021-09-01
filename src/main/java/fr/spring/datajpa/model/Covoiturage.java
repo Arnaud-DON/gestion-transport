@@ -13,6 +13,8 @@ import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import fr.spring.datajpa.enums.TravelStatus;
+
 @Entity
 public class Covoiturage extends AbstractTravel {
 	
@@ -43,6 +45,7 @@ public class Covoiturage extends AbstractTravel {
 		setAdresseDestination(adresseDestination);
 		setDuree(duree);
 		setDate(date);
+		setTravelStatus(TravelStatus.CREATED);
 		this.vehicule = vehicule;
 		this.passagers = new HashSet<Collaborateur>();
 		this.nbPassagers = 0;
