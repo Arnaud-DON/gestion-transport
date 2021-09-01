@@ -12,7 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import fr.spring.datajpa.enums.Category;
 import fr.spring.datajpa.enums.VehiculeStatus;
 
@@ -42,10 +44,11 @@ public class VehiculeService {
 	
 	@ManyToOne
 	@JoinColumn(name="RESPONSABLE")
+    @JsonBackReference(value="responsable")
 	private Administrateur responsable;
 
-	@JsonIgnore
 	@OneToMany(mappedBy="vehicule")
+    @JsonManagedReference(value="vehicule")
 	private Set<Reservation> reservations;
 	
 	public VehiculeService() {

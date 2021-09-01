@@ -1,33 +1,31 @@
 package fr.spring.datajpa.controller;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
 
-import fr.spring.datajpa.DTO.CovoiturageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.spring.datajpa.DTO.CovoiturageDTO;
 import fr.spring.datajpa.model.AbstractTravel;
-import fr.spring.datajpa.model.AbstractUser;
 import fr.spring.datajpa.model.Collaborateur;
 import fr.spring.datajpa.model.Covoiturage;
 import fr.spring.datajpa.model.VehiculePrivate;
 import fr.spring.datajpa.payload.request.PublicationRequest;
+import fr.spring.datajpa.repository.CovoiturageRepository;
 import fr.spring.datajpa.repository.TravelRepository;
 import fr.spring.datajpa.repository.UserRepository;
-
-import fr.spring.datajpa.repository.CovoiturageRepository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @CrossOrigin(origins = "*")
@@ -45,12 +43,11 @@ public class TravelController {
 	public ResponseEntity<?> publishAnnonce(@Valid @RequestBody PublicationRequest pubRequest) {
 		try {
 			
-			AbstractUser currentUser = AuthController.getCurrentUtilisateur(userRepository);
 			Collaborateur organisateur = null;
-			if(currentUser instanceof Collaborateur) {
-				organisateur = (Collaborateur) currentUser;
+			try {
+				organisateur = (Collaborateur) AuthController.getCurrentUtilisateur(userRepository);
 			}
-			else {
+			catch(ClassCastException e) {
 				throw new Exception("Unauthorized action ");
 			}
 			
@@ -116,4 +113,54 @@ public class TravelController {
 			dtos.add(dto);
 		}
 		return dtos;}
+
+	@GetMapping("/listAvailablesCovoiturages")
+	public ResponseEntity<?> getAvailableCovoits(){
+		try {
+			
+			Collaborateur currentUser = null;
+			try {
+				currentUser = (Collaborateur) AuthController.getCurrentUtilisateur(userRepository);
+			}
+			catch(ClassCastException e) {
+				throw new Exception("Unauthorized action ");
+			}
+			List<Covoiturage> availableCovoits = covoiturageRepository.findAvailableCovoitsForUserID(currentUser.getId());
+		
+			availableCovoits.removeAll(covoiturageRepository.findCovoiturageCollaborateur(currentUser.getMail()));
+			
+			return new ResponseEntity<List<Covoiturage>>(
+					availableCovoits, HttpStatus.CREATED);
+		}
+		catch(Exception e){
+			return ResponseEntity
+		            .status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	}
+
+	@PostMapping("/reserverCovoits")
+	public ResponseEntity<?> reserverCovoits(@Valid @RequestBody Covoiturage[] covoits){
+		try {
+			
+			Collaborateur currentUser = null;
+			try {
+				currentUser = (Collaborateur) AuthController.getCurrentUtilisateur(userRepository);
+			}
+			catch(ClassCastException e) {
+				throw new Exception("Unauthorized action ");
+			}
+			
+			for(Covoiturage covoit: covoits) {
+				covoit.addPassager(currentUser);
+				covoit = travelRepository.save(covoit);
+			}
+			
+			return new ResponseEntity<Covoiturage[]>(covoits, HttpStatus.CREATED);
+		}
+		catch(Exception e){
+			return ResponseEntity
+		            .status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	}
+	
 }

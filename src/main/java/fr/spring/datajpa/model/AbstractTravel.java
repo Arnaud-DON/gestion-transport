@@ -11,11 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import fr.spring.datajpa.enums.TravelStatus;
 
@@ -27,11 +23,6 @@ public abstract class AbstractTravel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-
-	@ManyToOne
-	@JsonIgnore
-	@JoinColumn(name="ORGANISATEUR")
-	private Collaborateur organisateur;
 	
 	@Column(name = "ADRESSE_DEPART")
 	private String adresseDepart;
@@ -48,14 +39,6 @@ public abstract class AbstractTravel {
 	@Enumerated(EnumType.STRING)
 	@Column(name="TravelStatus")
 	private TravelStatus TravelStatus;
-
-	public Collaborateur getOrganisateur() {
-		return organisateur;
-	}
-
-	public void setOrganisateur(Collaborateur organisateur) {
-		this.organisateur = organisateur;
-	}
 
 	public String getAdresseDepart() {
 		return adresseDepart;

@@ -10,9 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import fr.spring.datajpa.enums.TravelStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import fr.spring.datajpa.enums.TravelStatus;
 
@@ -20,36 +21,49 @@ import fr.spring.datajpa.enums.TravelStatus;
 public class Covoiturage extends AbstractTravel {
 	
 	@ManyToMany
-	@JsonIgnore
 	@JoinTable(name="USER_TRAVEL",
-		joinColumns=@JoinColumn(name="ID_TRAVEL", referencedColumnName="ID"),
-		inverseJoinColumns=@JoinColumn(name="ID_USER", referencedColumnName="ID")
+		joinColumns=@JoinColumn(name="ID_COVOIT", referencedColumnName="id"),
+		inverseJoinColumns=@JoinColumn(name="ID_PASSAGER", referencedColumnName="id")
 	)
+	@JsonIgnoreProperties("travels")
 	private Set<Collaborateur> passagers;
 
 	@Column(name = "NB_PASSAGERS")
 	private int nbPassagers;
-	
-	@Embedded
-	private VehiculePrivate vehicule;
-	
-	public Covoiturage() {
-		passagers = new HashSet<Collaborateur>();
+
+	@ManyToOne
+	@JoinColumn(name="ORGANISATEUR")
+    @JsonBackReference(value="organisateur")
+	private Collaborateur organisateur;
+
+	public Collaborateur getOrganisateur() {
+		return organisateur;
 	}
 	
 	
 
 	public Covoiturage(Collaborateur organisateur, String adresseDepart, String adresseDestination,
 			int duree, LocalDateTime date, VehiculePrivate vehicule) {
-		setOrganisateur(organisateur);
 		setAdresseDepart(adresseDepart);
 		setAdresseDestination(adresseDestination);
 		setDuree(duree);
 		setDate(date);
 		setTravelStatus(TravelStatus.CREATED);
+		this.organisateur = organisateur;
 		this.vehicule = vehicule;
 		this.passagers = new HashSet<Collaborateur>();
 		this.nbPassagers = 0;
+	}
+
+	public void setOrganisateur(Collaborateur organisateur) {
+		this.organisateur = organisateur;
+	}
+	
+	@Embedded
+	private VehiculePrivate vehicule;
+	
+	public Covoiturage() {
+		passagers = new HashSet<Collaborateur>();
 	}
 
 	public int getNbPassagers() {
@@ -75,7 +89,7 @@ public class Covoiturage extends AbstractTravel {
 
 
 	public void addPassager(Collaborateur passager) {
-		if(getNbPassagers() > vehicule.getTotalPlaces() +1) {
+		if(getNbPassagers() < vehicule.getTotalPlaces()) {
 			this.passagers.add(passager);
 			this.nbPassagers++;
 		}
