@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import fr.spring.datajpa.enums.TravelStatus;
 
@@ -24,6 +25,7 @@ public class Covoiturage extends AbstractTravel {
 		joinColumns=@JoinColumn(name="ID_COVOIT", referencedColumnName="id"),
 		inverseJoinColumns=@JoinColumn(name="ID_PASSAGER", referencedColumnName="id")
 	)
+	@JsonIgnoreProperties("travels")
 	private Set<Collaborateur> passagers;
 
 	@Column(name = "NB_PASSAGERS")
