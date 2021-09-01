@@ -67,7 +67,7 @@ public class VehiculeService {
 	public void setImmatriculation(String immatriculation) {
 		this.immatriculation = immatriculation;
 	}
-
+  
 	public String getImgUrl() {
 		return imgUrl;
 	}

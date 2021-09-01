@@ -14,6 +14,8 @@ import javax.persistence.ManyToMany;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.spring.datajpa.enums.TravelStatus;
 
+import fr.spring.datajpa.enums.TravelStatus;
+
 @Entity
 public class Covoiturage extends AbstractTravel {
 	

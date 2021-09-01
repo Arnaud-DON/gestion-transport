@@ -7,10 +7,13 @@ import fr.spring.datajpa.DTO.CovoiturageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import fr.spring.datajpa.model.AbstractTravel;
 import fr.spring.datajpa.model.AbstractUser;
@@ -20,7 +23,7 @@ import fr.spring.datajpa.model.VehiculePrivate;
 import fr.spring.datajpa.payload.request.PublicationRequest;
 import fr.spring.datajpa.repository.TravelRepository;
 import fr.spring.datajpa.repository.UserRepository;
-import fr.spring.datajpa.security.services.UserDetailsImpl;
+
 import fr.spring.datajpa.repository.CovoiturageRepository;
 
 import java.util.ArrayList;
@@ -39,16 +42,16 @@ public class TravelController {
 	UserRepository userRepository;
 	
 	@PostMapping("/newAnnonce")
-	public ResponseEntity<?> createTutorial(@Valid @RequestBody PublicationRequest pubRequest) {
+	public ResponseEntity<?> publishAnnonce(@Valid @RequestBody PublicationRequest pubRequest) {
 		try {
 			
-			AbstractUser currentUser = getCurrentUtilisateur();
+			AbstractUser currentUser = AuthController.getCurrentUtilisateur(userRepository);
 			Collaborateur organisateur = null;
 			if(currentUser instanceof Collaborateur) {
 				organisateur = (Collaborateur) currentUser;
 			}
 			else {
-				throw new Exception("Unauthorized action !");
+				throw new Exception("Unauthorized action ");
 			}
 			
 			String immatriculation = pubRequest.getImmatriculation();
@@ -92,16 +95,6 @@ public class TravelController {
 		}
 	}
 	
-	private AbstractUser getCurrentUtilisateur() throws Exception{
-
-		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-		AbstractUser currentUser = userRepository.findByMail(userDetails.getEmail())
-				.orElseThrow(() -> new UsernameNotFoundException("Authentication error, please logout and login back. If the problem persists please contact an administrator."));
-		
-		return currentUser;
-	}
-
 	@Autowired
 	CovoiturageRepository covoiturageRepository;
 
@@ -109,7 +102,7 @@ public class TravelController {
 	public List<CovoiturageDTO> extraireCovoit(@RequestParam(value = "type", required = false) String type)
 	throws Exception{
 
-		List<Covoiturage> covoiturages = covoiturageRepository.findCovoiturageCollaborateur(getCurrentUtilisateur().getMail());
+		List<Covoiturage> covoiturages = covoiturageRepository.findCovoiturageCollaborateur(AuthController.getCurrentUtilisateur(userRepository).getMail());
 
 		List<CovoiturageDTO> dtos = new ArrayList<>();
 		for (Covoiturage covoit: covoiturages) {
