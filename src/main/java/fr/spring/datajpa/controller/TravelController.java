@@ -127,6 +127,8 @@ public class TravelController {
 			}
 			List<Covoiturage> availableCovoits = covoiturageRepository.findAvailableCovoitsForUserID(currentUser.getId());
 		
+			availableCovoits.removeAll(covoiturageRepository.findCovoiturageCollaborateur(currentUser.getMail()));
+			
 			return new ResponseEntity<List<Covoiturage>>(
 					availableCovoits, HttpStatus.CREATED);
 		}
@@ -135,6 +137,30 @@ public class TravelController {
 		            .status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	}
-	
+
+	@PostMapping("/reserverCovoits")
+	public ResponseEntity<?> reserverCovoits(@Valid @RequestBody Covoiturage[] covoits){
+		try {
+			
+			Collaborateur currentUser = null;
+			try {
+				currentUser = (Collaborateur) AuthController.getCurrentUtilisateur(userRepository);
+			}
+			catch(ClassCastException e) {
+				throw new Exception("Unauthorized action ");
+			}
+			
+			for(Covoiturage covoit: covoits) {
+				covoit.addPassager(currentUser);
+				covoit = travelRepository.save(covoit);
+			}
+			
+			return new ResponseEntity<Covoiturage[]>(covoits, HttpStatus.CREATED);
+		}
+		catch(Exception e){
+			return ResponseEntity
+		            .status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	}
 	
 }
