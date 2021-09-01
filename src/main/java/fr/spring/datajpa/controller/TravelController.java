@@ -114,6 +114,40 @@ public class TravelController {
 		}
 		return dtos;}
 
+	@GetMapping("/listcoivoiturageencours")
+	public List<CovoiturageDTO> extraireCurrentCovoit(@RequestParam(value="type",required = false)String type)
+		throws Exception{List<Covoiturage> covoiturages = covoiturageRepository.findAllCurrentCovoiturageCollaborateur(AuthController.getCurrentUtilisateur(userRepository).getMail());
+
+		List<CovoiturageDTO> dtos = new ArrayList<>();
+		for (Covoiturage covoit: covoiturages) {
+			CovoiturageDTO dto = new CovoiturageDTO();
+			dto.setAdresseDepart(covoit.getAdresseDepart());
+			dto.setDate(covoit.getDate());
+			dto.setAdresseDestination(covoit.getAdresseDestination());
+			dto.setDuree(covoit.getDuree());
+			dto.setOrganisateur(covoit.getOrganisateur());
+			dto.setNbPassagers(covoit.getNbPassagers());
+			dtos.add(dto);
+		}
+		return dtos;}
+
+	@GetMapping("/listcoivoituragetermine")
+	public List<CovoiturageDTO> extrairePreviousCovoit(@RequestParam(value="type",required = false)String type)
+			throws Exception{List<Covoiturage> covoiturages = covoiturageRepository.findAllPreviousCovoiturageCollaborateur(AuthController.getCurrentUtilisateur(userRepository).getMail());
+
+		List<CovoiturageDTO> dtos = new ArrayList<>();
+		for (Covoiturage covoit: covoiturages) {
+			CovoiturageDTO dto = new CovoiturageDTO();
+			dto.setAdresseDepart(covoit.getAdresseDepart());
+			dto.setDate(covoit.getDate());
+			dto.setAdresseDestination(covoit.getAdresseDestination());
+			dto.setDuree(covoit.getDuree());
+			dto.setOrganisateur(covoit.getOrganisateur());
+			dto.setNbPassagers(covoit.getNbPassagers());
+			dtos.add(dto);
+		}
+		return dtos;}
+
 	@GetMapping("/listAvailablesCovoiturages")
 	public ResponseEntity<?> getAvailableCovoits(){
 		try {

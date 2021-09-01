@@ -18,4 +18,14 @@ public interface CovoiturageRepository extends JpaRepository<Covoiturage, Long> 
 			, nativeQuery = false)
     public List<Covoiturage> findAvailableCovoitsForUserID(@Param("userId") Long userId);
 
+    @Query(value = "SELECT cv FROM Covoiturage cv JOIN FETCH cv.passagers psgr"
+                + " WHERE psgr.mail=:mail"
+                + " AND cv.TravelStatus = 'CREATED'", nativeQuery = false)
+    public List<Covoiturage> findAllCurrentCovoiturageCollaborateur(@Param("mail") String mail);
+
+    @Query(value = "SELECT cv FROM Covoiturage cv JOIN FETCH cv.passagers psgr"
+            + " WHERE psgr.mail=:mail"
+            + " AND cv.TravelStatus = 'TERMINATED'", nativeQuery = false)
+    public List<Covoiturage> findAllPreviousCovoiturageCollaborateur(@Param("mail") String mail);
+
 }
