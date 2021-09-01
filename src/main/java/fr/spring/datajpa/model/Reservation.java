@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Reservation extends AbstractTravel {
 
@@ -13,6 +15,7 @@ public class Reservation extends AbstractTravel {
 
 	@ManyToOne
 	@JoinColumn(name="VEHICULE")
+	@JsonBackReference(value="vehicule")
 	private VehiculeService vehicule;
 	
 	@ManyToOne
