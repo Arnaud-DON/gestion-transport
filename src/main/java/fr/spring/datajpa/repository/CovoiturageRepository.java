@@ -14,6 +14,7 @@ public interface CovoiturageRepository extends JpaRepository<Covoiturage, Long> 
     @Query(value = "SELECT cv FROM Covoiturage cv JOIN FETCH cv.passagers psgr"
     			+ " WHERE cv.TravelStatus = 'CREATED'"
     			+ " AND cv.organisateur.id != :userId"
+    			+ " AND cv.nbPassagers < cv.vehicule.totalPlaces"
     			+ " AND (SELECT count(c2) FROM Covoiturage c2"
 					+ " WHERE psgr.id = :userId) <= 0"
 			, nativeQuery = false)
