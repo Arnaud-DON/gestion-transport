@@ -1,13 +1,14 @@
 package fr.spring.datajpa.controller;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 import javax.validation.Valid;
 
+import fr.spring.datajpa.DTO.CovoiturageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,11 @@ import fr.spring.datajpa.model.VehiculePrivate;
 import fr.spring.datajpa.payload.request.PublicationRequest;
 import fr.spring.datajpa.repository.TravelRepository;
 import fr.spring.datajpa.repository.UserRepository;
+
+import fr.spring.datajpa.repository.CovoiturageRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @CrossOrigin(origins = "*")
@@ -89,4 +95,25 @@ public class TravelController {
 		}
 	}
 	
+	@Autowired
+	CovoiturageRepository covoiturageRepository;
+
+	@GetMapping("/listcovoiturage")
+	public List<CovoiturageDTO> extraireCovoit(@RequestParam(value = "type", required = false) String type)
+	throws Exception{
+
+		List<Covoiturage> covoiturages = covoiturageRepository.findCovoiturageCollaborateur(AuthController.getCurrentUtilisateur(userRepository).getMail());
+
+		List<CovoiturageDTO> dtos = new ArrayList<>();
+		for (Covoiturage covoit: covoiturages) {
+			CovoiturageDTO dto = new CovoiturageDTO();
+			dto.setAdresseDepart(covoit.getAdresseDepart());
+			dto.setDate(covoit.getDate());
+			dto.setAdresseDestination(covoit.getAdresseDestination());
+			dto.setDuree(covoit.getDuree());
+			dto.setOrganisateur(covoit.getOrganisateur());
+			dto.setNbPassagers(covoit.getNbPassagers());
+			dtos.add(dto);
+		}
+		return dtos;}
 }

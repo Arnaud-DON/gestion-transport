@@ -13,7 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import fr.spring.datajpa.enums.Category;
 import fr.spring.datajpa.enums.VehiculeStatus;
 
@@ -68,31 +67,7 @@ public class VehiculeService {
 	public void setImmatriculation(String immatriculation) {
 		this.immatriculation = immatriculation;
 	}
-
-	public String getMarque() {
-		return marque;
-	}
-
-	public void setMarque(String marque) {
-		this.marque = marque;
-	}
-
-	public String getModele() {
-		return modele;
-	}
-
-	public void setModele(String modele) {
-		this.modele = modele;
-	}
-
-	public Category getCategorie() {
-		return categorie;
-	}
-
-	public void setCategorie(Category categorie) {
-		this.categorie = categorie;
-	}
-
+  
 	public String getImgUrl() {
 		return imgUrl;
 	}
@@ -120,5 +95,32 @@ public class VehiculeService {
 	public Set<Reservation> getReservations() {
 		return reservations;
 	}
-	
+
+	public String getMarque() {
+		return marque;
+	}
+
+	public void setMarque(String marque) {
+		this.marque = marque;
+	}
+
+	public String getModele() {
+		return modele;
+	}
+
+	public void setModele(String modele) {
+		this.modele = modele;
+	}
+
+	public Category getCategorie() {
+		return categorie;
+	}
+
+	public void setCategorie(Category categorie) {
+		this.categorie = categorie;
+	}
+
+	public void setReservations(Set<Reservation> reservations) {
+		this.reservations = reservations;
+	}
 }
