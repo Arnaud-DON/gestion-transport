@@ -5,36 +5,35 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import fr.spring.datajpa.enums.Role;
 
 @Entity
 public class Collaborateur extends AbstractUser {
-	
-	@ManyToMany
-	@JoinTable(name="USER_TRAVEL",
-		joinColumns=@JoinColumn(name="ID_USER", referencedColumnName="ID"),
-		inverseJoinColumns=@JoinColumn(name="ID_TRAVEL", referencedColumnName="ID")
-	)
+
+	@ManyToMany(mappedBy = "passagers")
+	@JsonIgnoreProperties("passagers")
 	private Set<Covoiturage> travels;
 	
 	@OneToMany(mappedBy="organisateur")
-	private Set<AbstractTravel> annoncesPubliees;
+	@JsonManagedReference(value="organisateur")
+	private Set<Covoiturage> annoncesPubliees;
 	
 	public Collaborateur() {
 		travels = new HashSet<Covoiturage>();
-		annoncesPubliees = new HashSet<AbstractTravel>();
+		annoncesPubliees = new HashSet<Covoiturage>();
 	}
 
 	public Set<Covoiturage> getTravels() {
 		return travels;
 	}
 
-	public Set<AbstractTravel> getAnnoncePubliees() {
+	public Set<Covoiturage> getAnnoncePubliees() {
 		return annoncesPubliees;
 	}
 
