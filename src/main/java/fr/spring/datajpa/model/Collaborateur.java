@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import fr.spring.datajpa.enums.Role;
@@ -17,7 +17,7 @@ import fr.spring.datajpa.enums.Role;
 public class Collaborateur extends AbstractUser {
 
 	@ManyToMany(mappedBy = "passagers")
-	@JsonIgnoreProperties("passagers")
+	@JsonIgnore
 	private Set<Covoiturage> travels;
 	
 	@OneToMany(mappedBy="organisateur")
