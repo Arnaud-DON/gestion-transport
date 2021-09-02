@@ -1,8 +1,8 @@
 package fr.spring.datajpa.repository;
 
-import fr.spring.datajpa.model.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+
+import fr.spring.datajpa.model.Reservation;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 /** @Query(value = SELECT resa FROM Reservation resa JOIN FETCH .passagers psgr\"\n" +
