@@ -1,5 +1,7 @@
 package fr.spring.datajpa.controller;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -18,8 +20,13 @@ import fr.spring.datajpa.enums.Category;
 import fr.spring.datajpa.enums.VehiculeStatus;
 import fr.spring.datajpa.model.AbstractUser;
 import fr.spring.datajpa.model.Administrateur;
+import fr.spring.datajpa.model.Collaborateur;
+import fr.spring.datajpa.model.Reservation;
 import fr.spring.datajpa.model.VehiculeService;
 import fr.spring.datajpa.payload.request.AddVehiculeRequest;
+import fr.spring.datajpa.payload.request.ResaRequest;
+import fr.spring.datajpa.payload.request.VoitureRequest;
+import fr.spring.datajpa.repository.ReservationRepository;
 import fr.spring.datajpa.repository.UserRepository;
 import fr.spring.datajpa.repository.VehiculeRepository;
 
@@ -84,6 +91,75 @@ public class VehiculeController {
 			vehicule = vehiculeRepository.save(vehicule);
 			return new ResponseEntity<VehiculeService>(vehicule, HttpStatus.CREATED);
 		} catch (Exception e) {
+			return ResponseEntity
+		            .status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	}
+
+	@PostMapping("/listAvailablesVehicules")
+	public ResponseEntity<?> getAvailableVehiculesForDates(@Valid @RequestBody VoitureRequest request){
+		try {
+			@SuppressWarnings("unused")
+			Collaborateur currentUser = null;
+			try {
+				currentUser = (Collaborateur) AuthController.getCurrentUtilisateur(userRepository);
+			}
+			catch(ClassCastException e) {
+				throw new Exception("Unauthorized action ");
+			}
+			List<VehiculeService> voituresDispos = vehiculeRepository.findLesVoituresQuiPeuventRouler();
+			List<VehiculeService> result = new ArrayList<VehiculeService>();
+			
+			LocalDateTime dateAller = request.getDateTimeAller();
+			LocalDateTime dateRetour = request.getDateTimeRetour();
+			
+			for(VehiculeService voiture : voituresDispos) {
+				if(voiture.getConcurrentTravel(dateAller, dateRetour) == null){
+					result.add(voiture);
+				}
+			}
+			
+			return new ResponseEntity<List<VehiculeService>>(
+					result, HttpStatus.CREATED);
+		}
+		catch(Exception e){
+			return ResponseEntity
+		            .status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	}
+	
+	@Autowired
+	ReservationRepository resaRepo;
+
+	@PostMapping("/reserverVehicule")
+	public ResponseEntity<?> reserverVehicules(@Valid @RequestBody ResaRequest request){
+		try {
+			
+			@SuppressWarnings("unused")
+			Collaborateur currentUser = null;
+			try {
+				currentUser = (Collaborateur) AuthController.getCurrentUtilisateur(userRepository);
+			}
+			catch(ClassCastException e) {
+				throw new Exception("Unauthorized action ");
+			}
+			
+			VehiculeService vehicule = request.getVehicule();
+			if(vehicule.getStatus() == VehiculeStatus.IN_SERVICE) {
+				vehicule.setStatus(VehiculeStatus.RESERVED);
+			}
+			
+			Reservation resa = new Reservation();
+			resa.setDate(request.getDateTimeAller());
+			resa.setDuree(request.getDuree());
+			resa.setVehicule(vehicule);
+//			resa.setWithDriver(request.withDriver);
+			resaRepo.save(resa);
+			vehicule = vehiculeRepository.save(vehicule);
+			
+			return new ResponseEntity<VehiculeService>(vehicule, HttpStatus.CREATED);
+		}
+		catch(Exception e){
 			return ResponseEntity
 		            .status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}

@@ -4,8 +4,9 @@ public enum VehiculeStatus {
 
 	CREATED,
 	REPAIRING,
-	AVAILABLE,
-	IN_TRAVEL,
+	RESERVED,
+	IN_SERVICE,
+	BUSY,
 	HS
 	
 }
