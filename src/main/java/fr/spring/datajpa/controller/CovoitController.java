@@ -24,17 +24,16 @@ import fr.spring.datajpa.model.Covoiturage;
 import fr.spring.datajpa.model.VehiculePrivate;
 import fr.spring.datajpa.payload.request.PublicationRequest;
 import fr.spring.datajpa.repository.CovoiturageRepository;
-import fr.spring.datajpa.repository.TravelRepository;
 import fr.spring.datajpa.repository.UserRepository;
 
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/travel")
-public class TravelController {
+public class CovoitController {
 
 	@Autowired
-	TravelRepository travelRepository;
+	CovoiturageRepository covoitRepository;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -84,7 +83,7 @@ public class TravelController {
 							vehicule
 						);
 			
-			covoit = travelRepository.save(covoit);
+			covoit = covoitRepository.save(covoit);
 			return new ResponseEntity<Covoiturage>(covoit, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return ResponseEntity
@@ -186,7 +185,7 @@ public class TravelController {
 			
 			for(Covoiturage covoit: covoits) {
 				covoit.addPassager(currentUser);
-				covoit = travelRepository.save(covoit);
+				covoit = covoitRepository.save(covoit);
 			}
 			
 			return new ResponseEntity<Covoiturage[]>(covoits, HttpStatus.CREATED);
