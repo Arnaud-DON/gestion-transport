@@ -137,6 +137,11 @@ public class VehiculeService {
 			LocalDateTime tDateDepart = resa.getDate();
 			LocalDateTime tDateArrivee = tDateDepart.plusMinutes(resa.getDuree());
 			
+			if(dateDepart.isEqual(tDateDepart) || dateDepart.isEqual(tDateArrivee)
+					|| dateArrivee.isEqual(tDateDepart) || dateArrivee.isEqual(tDateArrivee)) {
+				return resa;
+			}
+			
 			if((dateDepart.isBefore(tDateArrivee) && dateDepart.isAfter(tDateDepart)
 					|| dateArrivee.isBefore(tDateArrivee) && dateArrivee.isAfter(tDateDepart))
 			 || (tDateDepart.isBefore(dateArrivee) && tDateDepart.isAfter(dateDepart)
