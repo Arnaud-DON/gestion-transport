@@ -9,13 +9,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import fr.spring.datajpa.DTO.CovoiturageDTO;
 import fr.spring.datajpa.model.AbstractTravel;
@@ -126,6 +121,7 @@ public class CovoitController {
 			dto.setDuree(covoit.getDuree());
 			dto.setOrganisateur(covoit.getOrganisateur());
 			dto.setNbPassagers(covoit.getNbPassagers());
+			dto.setId(covoit.getId());
 			dtos.add(dto);
 		}
 		return dtos;}
@@ -143,9 +139,25 @@ public class CovoitController {
 			dto.setDuree(covoit.getDuree());
 			dto.setOrganisateur(covoit.getOrganisateur());
 			dto.setNbPassagers(covoit.getNbPassagers());
+			dto.setId(covoit.getId());
 			dtos.add(dto);
 		}
 		return dtos;}
+
+	@GetMapping("/covoituragebyid/{id}")
+	public CovoiturageDTO extraireCovoitById(@PathVariable("id") Long id){
+		CovoiturageDTO dto = new CovoiturageDTO();
+		 Covoiturage covoit = covoiturageRepository.getById(id);
+		dto.setAdresseDepart(covoit.getAdresseDepart());
+		dto.setDate(covoit.getDate());
+		dto.setAdresseDestination(covoit.getAdresseDestination());
+		dto.setDuree(covoit.getDuree());
+		dto.setOrganisateur(covoit.getOrganisateur());
+		dto.setNbPassagers(covoit.getNbPassagers());
+		dto.setId(covoit.getId());
+		dto.setVehicule(covoit.getVehicule());
+		return dto;
+	}
 
 	@GetMapping("/listAvailablesCovoiturages")
 	public ResponseEntity<?> getAvailableCovoits(){
