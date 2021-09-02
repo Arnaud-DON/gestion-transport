@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import fr.spring.datajpa.enums.Role;
@@ -17,16 +17,29 @@ import fr.spring.datajpa.enums.Role;
 public class Collaborateur extends AbstractUser {
 
 	@ManyToMany(mappedBy = "passagers")
-	@JsonIgnoreProperties("passagers")
+	@JsonIgnore
 	private Set<Covoiturage> travels;
 	
 	@OneToMany(mappedBy="organisateur")
 	@JsonManagedReference(value="organisateur")
 	private Set<Covoiturage> annoncesPubliees;
+
+	@OneToMany(mappedBy="organisateur")
+	@JsonManagedReference(value="organisateur")
+	private Set<Reservation> reservations;
 	
 	public Collaborateur() {
 		travels = new HashSet<Covoiturage>();
 		annoncesPubliees = new HashSet<Covoiturage>();
+		reservations = new HashSet<Reservation>();
+	}
+
+	public Set<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(Set<Reservation> reservations) {
+		this.reservations = reservations;
 	}
 
 	public Set<Covoiturage> getTravels() {

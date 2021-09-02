@@ -9,8 +9,14 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import fr.spring.datajpa.DTO.CovoiturageDTO;
 import fr.spring.datajpa.model.AbstractTravel;
@@ -80,6 +86,27 @@ public class CovoitController {
 			
 			covoit = covoitRepository.save(covoit);
 			return new ResponseEntity<Covoiturage>(covoit, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return ResponseEntity
+		            .status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	}
+	
+	@GetMapping("/mesAnnonces")
+	public ResponseEntity<?> getAnnonceOrganisateur(){
+		try {
+			
+			Collaborateur organisateur = null;
+			try {
+				organisateur = (Collaborateur) AuthController.getCurrentUtilisateur(userRepository);
+			}
+			catch(ClassCastException e) {
+				throw new Exception("Unauthorized action ");
+			}
+			
+			List<Covoiturage> covoits = covoitRepository.findByOrganisateur(organisateur);			
+
+			return new ResponseEntity<List<Covoiturage>>(covoits, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return ResponseEntity
 		            .status(HttpStatus.BAD_REQUEST).body(e.getMessage());
