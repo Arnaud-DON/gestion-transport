@@ -1,5 +1,6 @@
 package fr.spring.datajpa.model;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -125,5 +126,46 @@ public class VehiculeService {
 
 	public void setReservations(Set<Reservation> reservations) {
 		this.reservations = reservations;
+	}
+
+	// Return the first found concurrent travel of given date and duration, return null is no result
+	public AbstractTravel getConcurrentTravel(LocalDateTime dateDepart, int dureeMinutes) {
+		
+		
+		LocalDateTime dateArrivee = dateDepart.plusMinutes(dureeMinutes);
+		for(AbstractTravel resa : reservations) {
+			LocalDateTime tDateDepart = resa.getDate();
+			LocalDateTime tDateArrivee = tDateDepart.plusMinutes(resa.getDuree());
+			
+			if((dateDepart.isBefore(tDateArrivee) && dateDepart.isAfter(tDateDepart)
+					|| dateArrivee.isBefore(tDateArrivee) && dateArrivee.isAfter(tDateDepart))
+			 || (tDateDepart.isBefore(dateArrivee) && tDateDepart.isAfter(dateDepart)
+				|| tDateArrivee.isBefore(dateArrivee) && tDateArrivee.isAfter(dateDepart))) {
+				return resa;
+			}
+		}
+		return null;
+	}
+
+	public AbstractTravel getConcurrentTravel(LocalDateTime dateAller, LocalDateTime dateRetour) {
+		for(AbstractTravel resa : reservations) {
+			LocalDateTime tDateDepart = resa.getDate();
+			LocalDateTime tDateArrivee = tDateDepart.plusMinutes(resa.getDuree());
+			
+			if(dateAller.isEqual(tDateDepart) || dateAller.isEqual(tDateArrivee)
+					|| dateRetour.isEqual(tDateDepart) || dateRetour.isEqual(tDateArrivee)) {
+				return resa;
+			}
+			
+			if((dateAller.isBefore(tDateArrivee) && dateAller.isAfter(tDateDepart)
+					|| dateRetour.isBefore(tDateArrivee) && dateRetour.isAfter(tDateDepart))
+			 || (tDateDepart.isBefore(dateRetour) && tDateDepart.isAfter(dateAller)
+				|| tDateArrivee.isBefore(dateRetour) && tDateArrivee.isAfter(dateAller))) {
+				return resa;
+			}
+		}
+		return null;
+		// TODO Auto-generated method stub
+		
 	}
 }
