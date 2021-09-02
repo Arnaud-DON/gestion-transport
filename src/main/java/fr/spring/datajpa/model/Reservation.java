@@ -21,10 +21,13 @@ public class Reservation extends AbstractTravel {
 	@ManyToOne
 	@JoinColumn(name="CHAUFFEUR")
 	private Chauffeur chauffeur;
-	
-	public Reservation() {
 
-	}
+	@ManyToOne
+	@JoinColumn(name="ORGANISATEUR")
+	@JsonBackReference(value="organisateur")
+	private Collaborateur organisateur;
+	
+	public Reservation() { }
 
 	public boolean isWithDriver() {
 		return withDriver;
@@ -49,5 +52,8 @@ public class Reservation extends AbstractTravel {
 	public void setChauffeur(Chauffeur chauffeur) {
 		this.chauffeur = chauffeur;
 	}
-	
+
+	public Collaborateur getOrganisateur() {return organisateur;}
+
+	public void setOrganisateur(Collaborateur organisateur) {this.organisateur = organisateur;}
 }

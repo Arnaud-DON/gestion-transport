@@ -23,10 +23,23 @@ public class Collaborateur extends AbstractUser {
 	@OneToMany(mappedBy="organisateur")
 	@JsonManagedReference(value="organisateur")
 	private Set<Covoiturage> annoncesPubliees;
+
+	@OneToMany(mappedBy="organisateur")
+	@JsonManagedReference(value="organisateur")
+	private Set<Reservation> reservations;
 	
 	public Collaborateur() {
 		travels = new HashSet<Covoiturage>();
 		annoncesPubliees = new HashSet<Covoiturage>();
+		reservations = new HashSet<Reservation>();
+	}
+
+	public Set<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(Set<Reservation> reservations) {
+		this.reservations = reservations;
 	}
 
 	public Set<Covoiturage> getTravels() {
