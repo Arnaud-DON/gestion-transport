@@ -1,5 +1,6 @@
 package fr.spring.datajpa.model;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import fr.spring.datajpa.enums.Category;
 import fr.spring.datajpa.enums.VehiculeStatus;
@@ -43,10 +45,11 @@ public class VehiculeService {
 	
 	@ManyToOne
 	@JoinColumn(name="RESPONSABLE")
+    @JsonBackReference(value="responsable")
 	private Administrateur responsable;
 
-	@JsonIgnore
 	@OneToMany(mappedBy="vehicule")
+    @JsonManagedReference(value="vehicule")
 	private Set<Reservation> reservations;
 	
 	public VehiculeService() {
@@ -68,31 +71,7 @@ public class VehiculeService {
 	public void setImmatriculation(String immatriculation) {
 		this.immatriculation = immatriculation;
 	}
-
-	public String getMarque() {
-		return marque;
-	}
-
-	public void setMarque(String marque) {
-		this.marque = marque;
-	}
-
-	public String getModele() {
-		return modele;
-	}
-
-	public void setModele(String modele) {
-		this.modele = modele;
-	}
-
-	public Category getCategorie() {
-		return categorie;
-	}
-
-	public void setCategorie(Category categorie) {
-		this.categorie = categorie;
-	}
-
+  
 	public String getImgUrl() {
 		return imgUrl;
 	}
@@ -120,5 +99,73 @@ public class VehiculeService {
 	public Set<Reservation> getReservations() {
 		return reservations;
 	}
-	
+
+	public String getMarque() {
+		return marque;
+	}
+
+	public void setMarque(String marque) {
+		this.marque = marque;
+	}
+
+	public String getModele() {
+		return modele;
+	}
+
+	public void setModele(String modele) {
+		this.modele = modele;
+	}
+
+	public Category getCategorie() {
+		return categorie;
+	}
+
+	public void setCategorie(Category categorie) {
+		this.categorie = categorie;
+	}
+
+	public void setReservations(Set<Reservation> reservations) {
+		this.reservations = reservations;
+	}
+
+	// Return the first found concurrent travel of given date and duration, return null is no result
+	public AbstractTravel getConcurrentTravel(LocalDateTime dateDepart, int dureeMinutes) {
+		
+		
+		LocalDateTime dateArrivee = dateDepart.plusMinutes(dureeMinutes);
+		for(AbstractTravel resa : reservations) {
+			LocalDateTime tDateDepart = resa.getDate();
+			LocalDateTime tDateArrivee = tDateDepart.plusMinutes(resa.getDuree());
+			
+			if((dateDepart.isBefore(tDateArrivee) && dateDepart.isAfter(tDateDepart)
+					|| dateArrivee.isBefore(tDateArrivee) && dateArrivee.isAfter(tDateDepart))
+			 || (tDateDepart.isBefore(dateArrivee) && tDateDepart.isAfter(dateDepart)
+				|| tDateArrivee.isBefore(dateArrivee) && tDateArrivee.isAfter(dateDepart))) {
+				return resa;
+			}
+		}
+		return null;
+	}
+
+	public AbstractTravel getConcurrentTravel(LocalDateTime dateAller, LocalDateTime dateRetour) {
+		for(AbstractTravel resa : reservations) {
+			LocalDateTime tDateDepart = resa.getDate();
+			LocalDateTime tDateArrivee = tDateDepart.plusMinutes(resa.getDuree());
+			
+			if(dateAller.isEqual(tDateDepart) || dateAller.isEqual(tDateArrivee)
+					|| dateRetour.isEqual(tDateDepart) || dateRetour.isEqual(tDateArrivee)) {
+				return resa;
+			}
+			
+			if((dateAller.isBefore(tDateArrivee) && dateAller.isAfter(tDateDepart)
+					|| dateRetour.isBefore(tDateArrivee) && dateRetour.isAfter(tDateDepart))
+			 || (tDateDepart.isBefore(dateRetour) && tDateDepart.isAfter(dateAller)
+				|| tDateArrivee.isBefore(dateRetour) && tDateArrivee.isAfter(dateAller))) {
+				return resa;
+			}
+		}
+		return null;
+		// TODO Auto-generated method stub
+		
+	}
 }
