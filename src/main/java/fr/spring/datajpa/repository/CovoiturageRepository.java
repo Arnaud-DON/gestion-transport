@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import fr.spring.datajpa.model.Collaborateur;
 import fr.spring.datajpa.model.Covoiturage;
 
 public interface CovoiturageRepository extends JpaRepository<Covoiturage, Long> {
@@ -31,4 +32,6 @@ public interface CovoiturageRepository extends JpaRepository<Covoiturage, Long> 
 
     @Override
     Optional<Covoiturage> findById(Long aLong);
+    
+    public List<Covoiturage> findByOrganisateur(Collaborateur orga);
 }
