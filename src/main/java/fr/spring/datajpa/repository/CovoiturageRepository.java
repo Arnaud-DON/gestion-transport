@@ -1,5 +1,6 @@
 package fr.spring.datajpa.repository;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,12 +21,14 @@ public interface CovoiturageRepository extends JpaRepository<Covoiturage, Long> 
 
     @Query(value = "SELECT cv FROM Covoiturage cv JOIN FETCH cv.passagers psgr"
                 + " WHERE psgr.mail=:mail"
-                + " AND cv.TravelStatus = 'CREATED'", nativeQuery = false)
+                + " AND cv.date > CURRENT_DATE", nativeQuery = false)
     public List<Covoiturage> findAllCurrentCovoiturageCollaborateur(@Param("mail") String mail);
 
     @Query(value = "SELECT cv FROM Covoiturage cv JOIN FETCH cv.passagers psgr"
             + " WHERE psgr.mail=:mail"
-            + " AND cv.TravelStatus = 'TERMINATED'", nativeQuery = false)
+            + " AND cv.date < CURRENT_DATE", nativeQuery = false)
     public List<Covoiturage> findAllPreviousCovoiturageCollaborateur(@Param("mail") String mail);
 
+    @Override
+    Optional<Covoiturage> findById(Long aLong);
 }
